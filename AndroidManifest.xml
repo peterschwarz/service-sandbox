@@ -22,13 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".service.HelloService"/>
-        <receiver android:name=".service.ScheduleReceiver">
+        <service android:name=".HelloService"/>
+        <receiver android:name=".ScheduleReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".service.StartServiceReceiver"/>
+        <receiver android:name=".HelloServiceStarter"/>
     </application>
 
 </manifest>

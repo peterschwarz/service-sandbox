@@ -11,10 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
-import io.bicycle.service.HelloService;
 import io.bicycle.service.Scheduler;
 import io.bicycle.service.ServiceSupport;
-import io.bicycle.service.StartServiceReceiver;
 
 public class HelloAndroidActivity extends Activity {
 
@@ -38,7 +36,7 @@ public class HelloAndroidActivity extends Activity {
 
         helloText = (TextView) findViewById(R.id.helloText);
 
-        new Scheduler(StartServiceReceiver.class)
+        new Scheduler(HelloServiceStarter.class)
                 .withInterval(30 * 1000)
                 .schedule(this);
     }

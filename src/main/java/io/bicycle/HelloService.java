@@ -1,10 +1,11 @@
-package io.bicycle.service;
+package io.bicycle;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import io.bicycle.service.ServiceBinder;
 
 /**
  * User: pschwarz

@@ -1,8 +1,9 @@
-package io.bicycle.service;
+package io.bicycle;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import io.bicycle.service.Scheduler;
 
 import java.util.Calendar;
 
@@ -17,7 +18,7 @@ public class ScheduleReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        new Scheduler(StartServiceReceiver.class)
+        new Scheduler(HelloServiceStarter.class)
                 .withTriggerDelay(Calendar.SECOND, 30)
                 .withInterval(REPEAT_TIME)
                 .schedule(context);
