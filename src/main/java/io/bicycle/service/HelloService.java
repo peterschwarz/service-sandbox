@@ -28,14 +28,18 @@ public class HelloService extends Service {
         Log.d("HelloService", "Incrementing");
 
         if (helloCount % 3 == 0) {
-            Intent sayHi = new Intent(HELLO_ACTION);
-            sayHi.putExtra(HELLO_MESSAGE, "Hi ;-)");
-            sendBroadcast(sayHi);
-
-            Log.d("HelloService", "Sent hello");
+            sendHello();
         }
 
         return Service.START_NOT_STICKY;
+    }
+
+    private void sendHello() {
+        Intent sayHi = new Intent(HELLO_ACTION);
+        sayHi.putExtra(HELLO_MESSAGE, String.format("Hi ;-) (on count %d)", helloCount));
+        LocalBroadcastManager.getInstance(this).sendBroadcast(sayHi);
+
+        Log.d("HelloService", "Sent hello");
     }
 
     public String getHello() {

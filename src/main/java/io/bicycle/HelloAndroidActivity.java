@@ -5,14 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import io.bicycle.service.HelloService;
 import io.bicycle.service.Scheduler;
 import io.bicycle.service.ServiceSupport;
@@ -51,7 +49,7 @@ public class HelloAndroidActivity extends Activity {
 
         serviceSupport.onResume();
 
-        registerReceiver(mMessageReceiver,
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter(HelloService.HELLO_ACTION));
     }
 
@@ -61,7 +59,7 @@ public class HelloAndroidActivity extends Activity {
 
         serviceSupport.onPause();
 
-        unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -84,23 +82,11 @@ public class HelloAndroidActivity extends Activity {
             // Extract data included in the Intent
             String message = intent.getStringExtra(HelloService.HELLO_MESSAGE);
 
-            Log.d("receiver", "Got message: " + message);
+            Log.d("Hello.receiver", "Got message: " + message);
 
-            new MessageResponseAsync().execute(message);
+            helloText.setText(String.format("Message Received: %s", message));
         }
     };
 
-    private class MessageResponseAsync extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            return params[0];
-        }
-
-        @Override
-        protected void onPostExecute(String message) {
-            helloText.setText(String.format("Message Received: %s", message));
-        }
-    }
 }
 
