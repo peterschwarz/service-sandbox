@@ -1,10 +1,18 @@
 package io.bicycle;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import io.bicycle.service.HelloService;
 import io.bicycle.service.Scheduler;
 import io.bicycle.service.ServiceSupport;
@@ -32,7 +40,8 @@ public class HelloAndroidActivity extends Activity {
 
         helloText = (TextView) findViewById(R.id.helloText);
 
-        new Scheduler(StartServiceReceiver.class).withInterval(30 * 1000)
+        new Scheduler(StartServiceReceiver.class)
+                .withInterval(30 * 1000)
                 .schedule(this);
     }
 
@@ -41,6 +50,9 @@ public class HelloAndroidActivity extends Activity {
         super.onResume();
 
         serviceSupport.onResume();
+
+        registerReceiver(mMessageReceiver,
+                new IntentFilter(HelloService.HELLO_ACTION));
     }
 
     @Override
@@ -48,6 +60,8 @@ public class HelloAndroidActivity extends Activity {
         super.onPause();
 
         serviceSupport.onPause();
+
+        unregisterReceiver(mMessageReceiver);
     }
 
     @Override
@@ -57,13 +71,36 @@ public class HelloAndroidActivity extends Activity {
         return true;
     }
 
-    public void onClick(View view) {
+    public void onClick(@SuppressWarnings("UnusedParameters") View view) {
         if(serviceSupport.serviceAvailable()) {
             helloText.setText(serviceSupport.getService().getHello());
         }
     }
 
 
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Extract data included in the Intent
+            String message = intent.getStringExtra(HelloService.HELLO_MESSAGE);
 
+            Log.d("receiver", "Got message: " + message);
+
+            new MessageResponseAsync().execute(message);
+        }
+    };
+
+    private class MessageResponseAsync extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute(String message) {
+            helloText.setText(String.format("Message Received: %s", message));
+        }
+    }
 }
 

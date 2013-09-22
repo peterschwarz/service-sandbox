@@ -3,6 +3,7 @@ package io.bicycle.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
@@ -11,6 +12,9 @@ import android.util.Log;
  * Time: 11:11 AM
  */
 public class HelloService extends Service {
+
+    public static final String HELLO_ACTION = "io.bicycle.HelloService.SEND_DATA";
+    public static final String HELLO_MESSAGE = "message";
 
     private final IBinder binder = ServiceBinder.create(this);
 
@@ -23,6 +27,14 @@ public class HelloService extends Service {
 
         Log.d("HelloService", "Incrementing");
 
+        if (helloCount % 3 == 0) {
+            Intent sayHi = new Intent(HELLO_ACTION);
+            sayHi.putExtra(HELLO_MESSAGE, "Hi ;-)");
+            sendBroadcast(sayHi);
+
+            Log.d("HelloService", "Sent hello");
+        }
+
         return Service.START_NOT_STICKY;
     }
 
@@ -30,10 +42,8 @@ public class HelloService extends Service {
         return "Hello " + helloCount;
     }
 
-
     public IBinder onBind(Intent intent) {
         return binder;
     }
-
 
 }
